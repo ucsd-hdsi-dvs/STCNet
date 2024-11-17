@@ -12,9 +12,22 @@ import torch.utils.data as data
 
 from torch.utils.data.sampler import Sampler
 from torch.utils.data import DataLoader
+from labits import calc_labits
 # import multiprocessing
 # multiprocessing.set_start_method('spawn', force=True)
 
+
+def binary_events_to_labits(events, num_bins, width, height):
+    frame_size = (height, width)
+    xs = events[:, 1].astype(np.int)
+    ys = events[:, 2].astype(np.int)
+    ts = events[:, 0]
+    t_span = ts[-1] - ts[0]
+    t_range = t_span // (num_bins+1)
+    labits = calc_labits(xs, ys, ts, frame_size, t_range, num_bins=num_bins+1, norm=True)[1:]
+    return labits
+    
+    
 
 def binary_events_to_voxel_grid(events, num_bins, width, height):
     """
@@ -347,7 +360,6 @@ class DataLoaderTest_npz(Dataset):
             blur_img = np.float32(blur_img) / 255.0
             blur_img=blur_img.transpose([2, 0, 1])
 
-            # print(dvs_h,dvs_w)
             event=np.load(self.seqs_info[seq_idx]['event'][frame_idx+i])
             if len(event['t'])==0:
                 event_div_tensor = np.zeros((self.args.num_bins, self.DVS_stream_height, self.DVS_stream_width))
@@ -357,7 +369,6 @@ class DataLoaderTest_npz(Dataset):
                                                  num_bins=self.args.num_bins,
                                                  width=self.DVS_stream_width,
                                                  height=self.DVS_stream_height)
-
 
             event_frame=np.float32(event_div_tensor)
 
