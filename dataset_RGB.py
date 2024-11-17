@@ -2,19 +2,14 @@ import os
 import numpy as np
 from torch.utils.data import Dataset
 import torch
-from PIL import Image
-import torchvision.transforms.functional as TF
-from pdb import set_trace as stx
 import random
-import os, sys, math, random, glob, cv2, h5py, logging, random
+import math, random, glob, cv2, logging, random
 import utils
 import torch.utils.data as data
-
 from torch.utils.data.sampler import Sampler
 from torch.utils.data import DataLoader
+
 from labits import calc_labits
-# import multiprocessing
-# multiprocessing.set_start_method('spawn', force=True)
 
 
 def binary_events_to_labits(events, num_bins, width, height):
