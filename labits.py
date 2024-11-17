@@ -18,9 +18,15 @@ def calc_labits(xs, ys, ts, framesize, t_range, num_bins=5, norm=True):
         time_surface: the local bidirectional time surface for the current event, numpy array, shape: (2*r+1, 2*r+1)
     """
     H, W = framesize
+    # print("INSIDE CALC LABITS: t_range: ", t_range, "num_bins: ", num_bins)
     
-    # Array dimensions for the time surface
-    time_surface = np.full((num_bins, H, W), -np.inf)  # Use np.inf as a placeholder for unset values
+    # Return pure -1 if no events are present
+    if t_range == 0:
+        time_surface = np.full((num_bins, H, W), -1)
+        return time_surface
+    else:
+        # Array dimensions for the time surface
+        time_surface = np.full((num_bins, H, W), -np.inf)  # Use np.inf as a placeholder for unset values
     
     # Calculate the relative positions of ts
     t_cur = 0

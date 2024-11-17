@@ -14,16 +14,16 @@ from labits import calc_labits
 
 def binary_events_to_labits(events, num_bins, width, height):
     frame_size = (height, width)
-    xs = events[:, 1].astype(np.int)
-    ys = events[:, 2].astype(np.int)
+    xs = events[:, 1].astype(int)
+    ys = events[:, 2].astype(int)
     ts = events[:, 0]
+    ts = ts - ts[0]
     t_span = ts[-1] - ts[0]
-    t_range = t_span // (num_bins+1)
+    t_range = t_span / (num_bins+1)
     labits = calc_labits(xs, ys, ts, frame_size, t_range, num_bins=num_bins+1, norm=True)[1:]
+    # print(num_bins, t_range, t_span, ts[0], ts[-1], labits.mean(), labits.max(), labits.min(), labits.shape)
     return labits
     
-    
-
 def binary_events_to_voxel_grid(events, num_bins, width, height):
     """
     Build a voxel grid with bilinear interpolation in the time domain from a set of events.
@@ -51,13 +51,13 @@ def binary_events_to_voxel_grid(events, num_bins, width, height):
 
     events[:, 0] = (num_bins - 1) * (events[:, 0] - first_stamp) / deltaT
     ts = events[:, 0]
-    xs = events[:, 1].astype(np.int)
-    ys = events[:, 2].astype(np.int)
+    xs = events[:, 1].astype(int)
+    ys = events[:, 2].astype(int)
     pols = events[:, 3]
 
     pols[pols == 0] = -1  # polarity should be +1 / -1,这里没有问题
 
-    tis = ts.astype(np.int)
+    tis = ts.astype(int)
     dts = ts - tis
 
     vals_left = pols * (1.0 - dts)
@@ -131,6 +131,12 @@ class DataLoaderTrain_npz(data.Dataset):
 
         self.DVS_stream_height = 720
         self.DVS_stream_width = 1280
+        if self.args.USE_LABITS:
+            print('Using labits')
+        else:
+            print('Using voxel grid')
+        
+        
     def __len__(self):
         return len(self.sequences_list)
 
@@ -162,11 +168,18 @@ class DataLoaderTrain_npz(data.Dataset):
                 event_div_tensor = np.zeros((self.args.num_bins, self.DVS_stream_height, self.DVS_stream_width))
             else:
                 event_window = np.stack((event['t'],event['x'],event['y'],event['p']),axis=1)
-                event_div_tensor = binary_events_to_voxel_grid(event_window,
-                                                 num_bins=self.args.num_bins,
-                                                 width=self.DVS_stream_width,
-                                                 height=self.DVS_stream_height)
 
+                if self.args.USE_LABITS:
+                    event_div_tensor = binary_events_to_labits(event_window,
+                                                    num_bins=self.args.num_bins,
+                                                    width=self.DVS_stream_width,
+                                                    height=self.DVS_stream_height)
+                else:
+                    event_div_tensor = binary_events_to_voxel_grid(event_window,
+                                                    num_bins=self.args.num_bins,
+                                                    width=self.DVS_stream_width,
+                                                    height=self.DVS_stream_height)
+                                        
             event_frame = np.float32(event_div_tensor)
 
             event_frame = event_frame
@@ -260,15 +273,16 @@ class DataLoaderVal_npz(Dataset):
                 event_div_tensor = np.zeros((self.args.num_bins, self.DVS_stream_height, self.DVS_stream_width))
             else:
                 event_window = np.stack((event['t'],event['x'],event['y'],event['p']),axis=1)
-                # event_div_tensor = binary_events_to_voxel_grid(event_window,
-                #                                  num_bins=self.args.num_bins,
-                #                                  width=self.DVS_stream_width,
-                #                                  height=self.DVS_stream_height)
-                event_div_tensor = binary_events_to_labits(event_window,
-                                                 num_bins=self.args.num_bins,
-                                                 width=self.DVS_stream_width,
-                                                 height=self.DVS_stream_height)
-
+                if self.args.USE_LABITS:
+                    event_div_tensor = binary_events_to_labits(event_window,
+                                                    num_bins=self.args.num_bins,
+                                                    width=self.DVS_stream_width,
+                                                    height=self.DVS_stream_height)
+                else:
+                    event_div_tensor = binary_events_to_voxel_grid(event_window,
+                                                    num_bins=self.args.num_bins,
+                                                    width=self.DVS_stream_width,
+                                                    height=self.DVS_stream_height)
 
 
             event_frame=np.float32(event_div_tensor)
@@ -363,15 +377,17 @@ class DataLoaderTest_npz(Dataset):
                 event_div_tensor = np.zeros((self.args.num_bins, self.DVS_stream_height, self.DVS_stream_width))
             else:
                 event_window = np.stack((event['t'],event['x'],event['y'],event['p']),axis=1)
-                # event_div_tensor = binary_events_to_voxel_grid(event_window,
-                #                                  num_bins=self.args.num_bins,
-                #                                  width=self.DVS_stream_width,
-                #                                  height=self.DVS_stream_height)
-                event_div_tensor = binary_events_to_labits(event_window,
-                                                 num_bins=self.args.num_bins,
-                                                 width=self.DVS_stream_width,
-                                                 height=self.DVS_stream_height)
-
+                if self.args.USE_LABITS:
+                    event_div_tensor = binary_events_to_labits(event_window,
+                                                    num_bins=self.args.num_bins,
+                                                    width=self.DVS_stream_width,
+                                                    height=self.DVS_stream_height)
+                else:
+                    event_div_tensor = binary_events_to_voxel_grid(event_window,
+                                                    num_bins=self.args.num_bins,
+                                                    width=self.DVS_stream_width,
+                                                    height=self.DVS_stream_height)
+                    
             event_frame=np.float32(event_div_tensor)
 
             sharp_img=cv2.imread(self.seqs_info[seq_idx]['gt'][frame_idx+i])

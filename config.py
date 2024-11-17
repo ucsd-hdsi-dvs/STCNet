@@ -7,6 +7,7 @@ Created on Tue Jul 23 14:35:48 2019
 """
 
 r"""This module provides package-wide configuration management."""
+import os
 from typing import Any, List
 
 from yacs.config import CfgNode as CN
@@ -57,6 +58,7 @@ class Config(object):
 
         self._C = CN()
         self._C.GPU = [0]
+        self._C.USE_LABITS = False
         self._C.VERBOSE = False
 
         self._C.MODEL = CN()
@@ -84,12 +86,12 @@ class Config(object):
 
         self.result_dir='./output'
 
-
-        self.father_train_path_npz='./Datasets/GROPO/train'
-        self.father_val_path_npz='./Datasets/GROPO/test'
-        self.father_test_path_npz='./Datasets/GROPO/test'
-
-
+        # self.data_root = './Datasets/GROPO'
+        
+        self.data_root = '/tsukimi/datasets/gopro_event'
+        self.father_train_path_npz=os.path.join(self.data_root, 'train')
+        self.father_val_path_npz=os.path.join(self.data_root, 'test')
+        self.father_test_path_npz=os.path.join(self.data_root, 'test')
 
         self.train_iters=1000
         self.unrolling_len=3
@@ -98,7 +100,6 @@ class Config(object):
         self.num_bins=6
         self.future_frames = 1
         self.past_frames = 1
-
 
         self.skip_type='sum'  # sum or concat=skip_concat
         self.activation='relu' ##sigmoid  or relu

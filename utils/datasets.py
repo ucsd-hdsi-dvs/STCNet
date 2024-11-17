@@ -43,13 +43,13 @@ def binary_events_to_voxel_grid(events, num_bins, width, height):
 
     events[:, 0] = (num_bins - 1) * (events[:, 0] - first_stamp) / deltaT
     ts = events[:, 0]
-    xs = events[:, 1].astype(np.int)
-    ys = events[:, 2].astype(np.int)
+    xs = events[:, 1].astype(int)
+    ys = events[:, 2].astype(int)
     pols = events[:, 3]
 
     pols[pols == 0] = -1  # polarity should be +1 / -1,这里没有问题
 
-    tis = ts.astype(np.int)
+    tis = ts.astype(int)
     dts = ts - tis
 
     vals_left = pols * (1.0 - dts)
