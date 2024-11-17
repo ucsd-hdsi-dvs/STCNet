@@ -27,5 +27,7 @@ TRAINING:
   RESUME: False
   TRAIN_PS: 4
   VAL_PS: 360
-  SAVE_DIR: './checkpoints'     # path to save models and images
+  # SAVE_DIR: './checkpoints'     # path to save models and images
+  SAVE_DIR: '/tsukimi/stcnet/checkpoints'     # path to save models and images
+  
   # SAVE_IMAGES: False
