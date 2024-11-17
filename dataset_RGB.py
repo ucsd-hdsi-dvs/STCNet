@@ -265,11 +265,14 @@ class DataLoaderVal_npz(Dataset):
                 event_div_tensor = np.zeros((self.args.num_bins, self.DVS_stream_height, self.DVS_stream_width))
             else:
                 event_window = np.stack((event['t'],event['x'],event['y'],event['p']),axis=1)
-                event_div_tensor = binary_events_to_voxel_grid(event_window,
+                # event_div_tensor = binary_events_to_voxel_grid(event_window,
+                #                                  num_bins=self.args.num_bins,
+                #                                  width=self.DVS_stream_width,
+                #                                  height=self.DVS_stream_height)
+                event_div_tensor = binary_events_to_labits(event_window,
                                                  num_bins=self.args.num_bins,
                                                  width=self.DVS_stream_width,
                                                  height=self.DVS_stream_height)
-
 
 
 
@@ -365,7 +368,11 @@ class DataLoaderTest_npz(Dataset):
                 event_div_tensor = np.zeros((self.args.num_bins, self.DVS_stream_height, self.DVS_stream_width))
             else:
                 event_window = np.stack((event['t'],event['x'],event['y'],event['p']),axis=1)
-                event_div_tensor = binary_events_to_voxel_grid(event_window,
+                # event_div_tensor = binary_events_to_voxel_grid(event_window,
+                #                                  num_bins=self.args.num_bins,
+                #                                  width=self.DVS_stream_width,
+                #                                  height=self.DVS_stream_height)
+                event_div_tensor = binary_events_to_labits(event_window,
                                                  num_bins=self.args.num_bins,
                                                  width=self.DVS_stream_width,
                                                  height=self.DVS_stream_height)
