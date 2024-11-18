@@ -162,8 +162,8 @@ def main():
                     res = torch.clamp(res, 0, 1)
                     input1 = res.cpu().numpy().transpose([1, 2, 0])
                     input2 = tar.cpu().numpy().transpose([1, 2, 0])
-                    print("input1 shape: ", input1.shape)
-                    print("input2 shape: ", input2.shape)
+                    # print("input1 shape: ", input1.shape)
+                    # print("input2 shape: ", input2.shape)
                     ssim_rgb = SSIM(input1, input2, multichannel=True, channel_axis=2, data_range=1)
                     ssim_val_rgb.append(ssim_rgb)
 

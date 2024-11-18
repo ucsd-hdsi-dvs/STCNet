@@ -2,7 +2,7 @@
 ## 
 ####
 
-GPU: [0] #[2,3]
+GPU: [0,1,2,3] #[2,3]
 USE_LABITS: True
 
 VERBOSE: True
