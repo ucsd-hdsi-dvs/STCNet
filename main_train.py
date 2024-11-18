@@ -140,6 +140,7 @@ def main():
 
             optimizer.step()
             epoch_loss += loss.item()
+            # break
 
 
         #### Evaluation ####
@@ -161,11 +162,14 @@ def main():
                     res = torch.clamp(res, 0, 1)
                     input1 = res.cpu().numpy().transpose([1, 2, 0])
                     input2 = tar.cpu().numpy().transpose([1, 2, 0])
-                    ssim_rgb = SSIM(input1, input2, multichannel=True)
+                    print("input1 shape: ", input1.shape)
+                    print("input2 shape: ", input2.shape)
+                    ssim_rgb = SSIM(input1, input2, multichannel=True, channel_axis=2, data_range=1)
                     ssim_val_rgb.append(ssim_rgb)
 
                     psnr_rgb = PSNR(input1, input2)
                     psnr_val_rgb.append(psnr_rgb)
+                # break
 
             ssim_val_rgb = np.mean(ssim_val_rgb)
             psnr_val_rgb = np.mean(psnr_val_rgb)
@@ -199,6 +203,7 @@ def main():
                         'state_dict': model_restoration.state_dict(),
                         'optimizer': optimizer.state_dict()
                         }, os.path.join(model_dir, f"model_epoch_{epoch}.pth"))
+            
 
         scheduler.step()
 

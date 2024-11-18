@@ -138,7 +138,7 @@ class DataLoaderTrain_npz(data.Dataset):
         
         
     def __len__(self):
-        return len(self.sequences_list)
+        return 10 #len(self.sequences_list)
 
     def __getitem__(self, index):
         file_item = self.sequences_list[index]
