@@ -136,9 +136,8 @@ class DataLoaderTrain_npz(data.Dataset):
         else:
             print('Using voxel grid')
         
-        
     def __len__(self):
-        return 10 #len(self.sequences_list)
+        return len(self.sequences_list)
 
     def __getitem__(self, index):
         file_item = self.sequences_list[index]
