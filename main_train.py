@@ -130,9 +130,9 @@ def main():
             input_img = data[0].cuda()
             input_event = data[1].cuda()
             input_target = data[2].cuda()
-            print("input_img shape: ", input_img.shape)
-            print("input_event shape: ", input_event.shape)
-            print("input_target shape: ", input_target.shape)
+            # print("input_img shape: ", input_img.shape)
+            # print("input_event shape: ", input_event.shape)
+            # print("input_target shape: ", input_target.shape)
             restored = model_restoration(input_img, input_event)
             input_target=input_target[:,1,:,:,:]
             loss_char = criterion_char(restored, input_target)
@@ -143,8 +143,8 @@ def main():
 
             optimizer.step()
             epoch_loss += loss.item()
-            if iteration == 2:
-                break
+            # if iteration == 2:
+            #     break
 
 
         #### Evaluation ####
@@ -157,13 +157,13 @@ def main():
                 input_img = data_val[0].cuda()
                 input_event = data_val[1].cuda()
                 input_target = data_val[2].cuda()
-                print("input_img shape: ", input_img.shape)
-                print("input_event shape: ", input_event.shape)
-                print("input_target shape: ", input_target.shape)
+                # print("input_img shape: ", input_img.shape)
+                # print("input_event shape: ", input_event.shape)
+                # print("input_target shape: ", input_target.shape)
 
                 with torch.no_grad():
                     restored = model_restoration(input_img, input_event)
-                print("restored shape: ", restored.shape)
+                # print("restored shape: ", restored.shape)
 
                 input_target = input_target[:, 1, :, :, :]
 
