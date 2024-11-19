@@ -3,13 +3,13 @@
 ####
 
 GPU: [0] #[2,3]
-USE_LABITS: False
+USE_LABITS: True
 
 VERBOSE: True
 
 MODEL:
   MODE: 'Deblurring'
-  SESSION: 'STCNet-Voxel-Test'
+  SESSION: 'STCNet-Labits'
 
 # Optimization arguments.
 OPTIM:
@@ -25,7 +25,7 @@ TESTING:
 TRAINING:
   VAL_AFTER_EVERY: 1
   RESUME: False
-  TRAIN_PS: 4
+  TRAIN_PS: 224
   VAL_PS: 360
   # SAVE_DIR: './checkpoints'     # path to save models and images
   SAVE_DIR: '/tsukimi/stcnet/checkpoints'     # path to save models and images
