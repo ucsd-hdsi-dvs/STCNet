@@ -3,13 +3,13 @@
 ####
 
 GPU: [0] #[2,3]
-USE_LABITS: True
+USE_LABITS: False
 
 VERBOSE: True
 
 MODEL:
   MODE: 'Deblurring'
-  SESSION: 'STCNet-Labits-Test'
+  SESSION: 'STCNet-Voxel-Test'
 
 # Optimization arguments.
 OPTIM:
