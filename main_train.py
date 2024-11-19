@@ -140,7 +140,8 @@ def main():
 
             optimizer.step()
             epoch_loss += loss.item()
-            # break
+            if iteration == 12:
+                break
 
 
         #### Evaluation ####
@@ -169,7 +170,8 @@ def main():
 
                     psnr_rgb = PSNR(input1, input2)
                     psnr_val_rgb.append(psnr_rgb)
-                # break
+                if ii == 12:
+                    break
 
             ssim_val_rgb = np.mean(ssim_val_rgb)
             psnr_val_rgb = np.mean(psnr_val_rgb)
