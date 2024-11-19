@@ -153,7 +153,7 @@ def main():
             psnr_val_rgb = []
             ssim_val_rgb = []
             for ii, data_val in enumerate(tqdm(val_loader), 0):
-                print("ii: ", ii)
+                # print("ii: ", ii)
                 input_img = data_val[0].cuda()
                 input_event = data_val[1].cuda()
                 input_target = data_val[2].cuda()
@@ -206,6 +206,11 @@ def main():
 
             print("[epoch %d PSNR: %.4f SSIM: %.4f --- best_epoch %d Best_PSNR %.4f Best_SSIM %.4f]" % (
             epoch, psnr_val_rgb, ssim_val_rgb, best_epoch, best_psnr, best_ssim))
+            if opt.USE_LABITS:
+                print("Now we are using LABITS")
+            else:
+                print("Now we are using Voxel Grid")
+            
             with open(model_dir + '/BEST.txt', 'a') as f:
                 f.write('Epoch:' + str(epoch) + ' PSNR:' + str(psnr_val_rgb) + ' ' + 'SSIM: ' + str(
                     ssim_val_rgb) + "\n")
